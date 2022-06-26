@@ -30,11 +30,11 @@ public class ModuleDescription {
             JarEntry jarEntry = jarEntries.nextElement();
             if (jarEntry.getName().endsWith(".class")) {
                 ClassFile classFile = new ClassFile(new DataInputStream(jar.getInputStream(jarEntry)));
-                if (classFile.getSuperclass().equals(Module.class.getName())) {
-                    main = classFile.getName();
-                    AnnotationsAttribute visible = (AnnotationsAttribute)classFile.getAttribute("RuntimeVisibleAnnotations");
+                AnnotationsAttribute visible = (AnnotationsAttribute) classFile.getAttribute("RuntimeVisibleAnnotations");
+                if (visible != null) {
                     for (Annotation annotation : visible.getAnnotations()) {
                         if (ModuleDefinition.class.getName().equals(annotation.getTypeName())) {
+                            main = classFile.getName();
                             name = ((StringMemberValue) annotation.getMemberValue("value")).getValue();
                         }
                     }
