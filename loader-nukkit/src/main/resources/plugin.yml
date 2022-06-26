@@ -1,0 +1,4 @@
+name: Lactea Loader
+main: de.timolia.lactea.nukkitloader.ModuleLoaderPlugin
+version: "1.0.0"
+load: POSTWORLD
