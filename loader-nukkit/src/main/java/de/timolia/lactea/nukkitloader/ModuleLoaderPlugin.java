@@ -1,6 +1,7 @@
 package de.timolia.lactea.nukkitloader;
 
 import cn.nukkit.plugin.PluginBase;
+import de.timolia.lactea.loader.internal.DefaultRuntime;
 import de.timolia.lactea.loader.module.ModuleManager;
 import java.io.File;
 
@@ -9,6 +10,7 @@ import java.io.File;
  */
 public class ModuleLoaderPlugin extends PluginBase {
     private final ModuleManager moduleManager = new ModuleManager(new File("lactea"));
+    private final DefaultRuntime runtime = new DefaultRuntime(moduleManager);
 
     @Override
     public void onLoad() {

@@ -8,7 +8,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -24,6 +26,15 @@ public class ModuleManager {
     private final File container;
     private final Map<String, ModuleDescription> definitions = new HashMap<>();
     private final Map<String, Module> modules = new HashMap<>();
+    private final Set<String> loaded = new HashSet<>();
+
+    public boolean isLoaded(String name) {
+        return loaded.contains(name);
+    }
+
+    public Module byName(String name) {
+        return modules.get(name);
+    }
 
     private boolean checkInvalidCandidate(File candidate) {
         String name = candidate.getName();
@@ -88,6 +99,7 @@ public class ModuleManager {
                 module.setDescription(description);
                 modules.put(description.getName(), module);
                 module.onLoad();
+                loaded.add(description.getName());
             } catch (Throwable ex) {
                 logger.log(Level.SEVERE, "Failed to load " + description.getName(), ex);
             }
