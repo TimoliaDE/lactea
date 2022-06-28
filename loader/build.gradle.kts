@@ -14,6 +14,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     compileOnly("org.projectlombok:lombok:1.18.24")
     implementation("org.javassist:javassist:3.29.0-GA")
+    implementation("com.google.inject:guice:5.1.0")
     annotationProcessor("org.projectlombok:lombok:1.18.24")
 
     testCompileOnly("org.projectlombok:lombok:1.18.24")

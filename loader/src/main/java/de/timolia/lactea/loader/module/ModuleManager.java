@@ -1,5 +1,7 @@
 package de.timolia.lactea.loader.module;
 
+import de.timolia.lactea.loader.startup.StartUpController;
+import de.timolia.lactea.loader.startup.internal.ModuleLoadContext;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -7,8 +9,10 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -25,14 +29,14 @@ public class ModuleManager {
     private final Logger logger = Logger.getLogger(ModuleManager.class.getName());
     private final File container;
     private final Map<String, ModuleDescription> definitions = new HashMap<>();
-    private final Map<String, Module> modules = new HashMap<>();
+    private final Map<String, LacteaModule> modules = new HashMap<>();
     private final Set<String> loaded = new HashSet<>();
 
     public boolean isLoaded(String name) {
         return loaded.contains(name);
     }
 
-    public Module byName(String name) {
+    public LacteaModule byName(String name) {
         return modules.get(name);
     }
 
@@ -88,28 +92,32 @@ public class ModuleManager {
         });
     }
 
-    public void loadAll() {
+    public List<ModuleLoadContext> loadAll(StartUpController startUpController) {
         URLClassLoader loader = (URLClassLoader) ModuleManager.class.getClassLoader();
         Method addURL = addUrlMethod();
+        List<ModuleLoadContext> contexts = new ArrayList<>();
         for (ModuleDescription description : definitions.values()) {
             try {
                 addURL.invoke(loader, description.url());
-                Class<?> main = loader.loadClass(description.getMain());
-                Module module = (Module) main.getConstructor().newInstance();
+                Class<? extends LacteaModule> main = (Class<? extends LacteaModule>) loader.loadClass(description.getMain());
+                LacteaModule module = main.getConstructor().newInstance();
                 module.setDescription(description);
                 modules.put(description.getName(), module);
-                module.onLoad();
+                ModuleLoadContext loadContext = startUpController.loadContext(module);
+                module.onLoad(loadContext);
+                contexts.add(loadContext);
                 loaded.add(description.getName());
             } catch (Throwable ex) {
                 logger.log(Level.SEVERE, "Failed to load " + description.getName(), ex);
             }
         }
+        return contexts;
     }
 
-    public void enableAll() {
-        for (Module module : modules.values()) {
+    public void enableAll(StartUpController startUpController) {
+        for (LacteaModule module : modules.values()) {
             try {
-                module.onEnable();
+                module.onEnable(startUpController.enableContext(module));
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Failed to enable " + module, ex);
             }
@@ -117,14 +125,14 @@ public class ModuleManager {
     }
 
     public void disableAll() {
-        for (Module module : modules.values()) {
+        for (LacteaModule module : modules.values()) {
             try {
                 module.onDisable();
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Failed to disable " + module, ex);
             }
         }
-        for (Module module : modules.values()) {
+        for (LacteaModule module : modules.values()) {
             try {
                 module.onPostDisable();
             } catch (Exception ex) {

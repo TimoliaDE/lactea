@@ -1,5 +1,8 @@
 package de.timolia.lactea.loader.module;
 
+import com.google.inject.Injector;
+import de.timolia.lactea.loader.startup.EnableContext;
+import de.timolia.lactea.loader.startup.LoadContext;
 import java.io.File;
 import java.util.logging.Logger;
 import lombok.AccessLevel;
@@ -9,16 +12,20 @@ import lombok.Setter;
 /**
  * @author David (_Esel)
  */
-@Getter
-public class Module {
+public class LacteaModule {
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PROTECTED)
+    private Injector injector;
+    @Getter
     @Setter(AccessLevel.PACKAGE)
     private ModuleDescription description;
+    @Getter(AccessLevel.PROTECTED)
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    public void onEnable() throws Exception {
+    public void onEnable(EnableContext context) throws Exception {
     }
 
-    public void onLoad() throws Exception {
+    public void onLoad(LoadContext context) throws Exception {
     }
 
     public void onDisable() throws Exception {
