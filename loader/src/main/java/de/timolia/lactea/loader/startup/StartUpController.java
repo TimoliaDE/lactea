@@ -14,6 +14,13 @@ import java.util.List;
 public class StartUpController {
     private final List<Module> baseModules = new ArrayList<>();
 
+
+    public ModuleLoadContext loadModule(LacteaModule module) throws Exception {
+        ModuleLoadContext loadContext = loadContext(module);
+        module.onLoad(loadContext);
+        return loadContext;
+    }
+
     public ModuleLoadContext loadContext(LacteaModule module) {
         return new ModuleLoadContext(this, module);
     }

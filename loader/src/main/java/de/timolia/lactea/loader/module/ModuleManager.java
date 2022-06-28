@@ -99,16 +99,15 @@ public class ModuleManager {
         for (ModuleDescription description : definitions.values()) {
             try {
                 addURL.invoke(loader, description.url());
-                Class<? extends LacteaModule> main = (Class<? extends LacteaModule>) loader.loadClass(description.getMain());
+                Class<? extends LacteaModule> main = description.getMain().loadClass();
                 LacteaModule module = main.getConstructor().newInstance();
                 module.setDescription(description);
                 modules.put(description.getName(), module);
-                ModuleLoadContext loadContext = startUpController.loadContext(module);
-                module.onLoad(loadContext);
+                ModuleLoadContext loadContext = startUpController.loadModule(module);
                 contexts.add(loadContext);
                 loaded.add(description.getName());
             } catch (Throwable ex) {
-                logger.log(Level.SEVERE, "Failed to load " + description.getName(), ex);
+                logger.log(Level.SEVERE, "Failed to load " + description.nameAndLocation(), ex);
             }
         }
         return contexts;
