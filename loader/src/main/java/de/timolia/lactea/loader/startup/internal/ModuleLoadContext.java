@@ -22,6 +22,7 @@ public class ModuleLoadContext implements LoadContext {
     private final List<Function<Injector, Module>> localModules = new ArrayList<>();
 
     public void fullModuleInitialization(Injector global) {
+        installModule(global.getInstance(LocalConfigModuleFactory.class).create(module));
         Injector injector = createInjector(global);
         InternalModuleAccess.setInjector(module, injector);
     }

@@ -40,4 +40,8 @@ public class ModuleDescription {
     public URL url() throws MalformedURLException {
         return file.toURI().toURL();
     }
+
+    public Class<? extends LacteaModule> mainClass() throws ClassNotFoundException {
+        return (Class<? extends LacteaModule>) main.loadClass();
+    }
 }

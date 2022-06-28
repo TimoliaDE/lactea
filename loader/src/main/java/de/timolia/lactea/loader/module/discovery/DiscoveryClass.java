@@ -41,7 +41,7 @@ public class DiscoveryClass {
         return byType(search.getName());
     }
 
-    public Class<? extends LacteaModule> loadClass() throws ClassNotFoundException {
-        return (Class<? extends LacteaModule>) Class.forName(name);
+    public Class<?> loadClass() throws ClassNotFoundException {
+        return Class.forName(name);
     }
 }

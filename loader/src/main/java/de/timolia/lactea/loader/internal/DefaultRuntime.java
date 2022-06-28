@@ -18,7 +18,12 @@ public class DefaultRuntime implements Runtime {
 
     public void initialize() {
         moduleManager.loadLibraries();
+        postLibraries();
+    }
+
+    private void postLibraries() {
         moduleManager.scan();
+        startUpController.addGlobalModule(binder -> binder.bind(Runtime.class).toInstance(this));
         List<ModuleLoadContext> contexts = moduleManager.loadAll(startUpController);
         startUpController.initializeInjectors(contexts);
     }

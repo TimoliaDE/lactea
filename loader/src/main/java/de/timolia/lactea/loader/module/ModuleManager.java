@@ -99,7 +99,7 @@ public class ModuleManager {
         for (ModuleDescription description : definitions.values()) {
             try {
                 addURL.invoke(loader, description.url());
-                Class<? extends LacteaModule> main = description.getMain().loadClass();
+                Class<? extends LacteaModule> main = description.mainClass();
                 LacteaModule module = main.getConstructor().newInstance();
                 module.setDescription(description);
                 modules.put(description.getName(), module);
