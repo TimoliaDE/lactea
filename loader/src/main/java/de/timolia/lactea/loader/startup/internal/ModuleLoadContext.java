@@ -2,6 +2,7 @@ package de.timolia.lactea.loader.startup.internal;
 
 import com.google.inject.Injector;
 import com.google.inject.Module;
+import de.timolia.lactea.loader.config.LocalConfigModuleFactory;
 import de.timolia.lactea.loader.module.InternalModuleAccess;
 import de.timolia.lactea.loader.module.LacteaModule;
 import de.timolia.lactea.loader.startup.LoadContext;
