@@ -1,0 +1,3 @@
+name: Lactea-Loader
+main: de.timolia.lactea.bukkitloader.ModuleLoaderPlugin
+version: "1.0.0"
