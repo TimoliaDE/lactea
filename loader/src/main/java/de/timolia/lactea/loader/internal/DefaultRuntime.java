@@ -8,6 +8,8 @@ import de.timolia.lactea.loader.startup.internal.ModuleLoadContext;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefaultRuntime implements Runtime {
     private final ModuleManager moduleManager;
+    @Getter
     private final StartUpController startUpController;
 
     public void initialize() {

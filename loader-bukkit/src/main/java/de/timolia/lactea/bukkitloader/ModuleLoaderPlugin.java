@@ -1,5 +1,6 @@
 package de.timolia.lactea.bukkitloader;
 
+import de.timolia.lactea.bukkitloader.inject.BukkitModule;
 import de.timolia.lactea.loader.internal.DefaultRuntime;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +14,7 @@ public class ModuleLoaderPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        runtime.getStartUpController().addGlobalModule(new BukkitModule(this));
         runtime.initialize();
     }
 
