@@ -12,4 +12,10 @@ public interface GameLoop {
     <V> CompletableFuture<V> runTimer(Callable<V> task, long delay, long period, TemporalUnit unit);
 
     <V> CompletableFuture<V> runLater(Callable<V> task, long delay, TemporalUnit unit);
+
+    boolean isOnGameThread();
+
+    void ensureOnGameThread();
+
+    CompletableFuture<?> runInGameThread(Runnable runnable);
 }
