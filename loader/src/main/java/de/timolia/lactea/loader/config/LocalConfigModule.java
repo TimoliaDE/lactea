@@ -53,7 +53,7 @@ public class LocalConfigModule extends AbstractModule {
             try {
                 loaded = clazz.loadClass();
             } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "Failed to find class previouisly discovered: " + clazz.getName(), e);
+                logger.log(Level.SEVERE, "Failed to find class previously discovered: " + clazz.getName(), e);
                 continue;
             }
             bindConfig(name, loaded);

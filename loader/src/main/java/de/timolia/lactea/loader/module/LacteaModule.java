@@ -1,9 +1,8 @@
 package de.timolia.lactea.loader.module;
 
-import com.google.inject.Injector;
+import de.timolia.lactea.loader.inject.ModuleInjector;
 import de.timolia.lactea.loader.startup.EnableContext;
 import de.timolia.lactea.loader.startup.LoadContext;
-import java.io.File;
 import java.util.logging.Logger;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +14,7 @@ import lombok.Setter;
 public class LacteaModule {
     @Setter(AccessLevel.PACKAGE)
     @Getter(AccessLevel.PROTECTED)
-    private Injector injector;
+    private ModuleInjector injector;
     @Getter
     @Setter(AccessLevel.PACKAGE)
     private ModuleDescription description;
@@ -33,9 +32,5 @@ public class LacteaModule {
     }
 
     public void onPostDisable() throws Exception {
-    }
-
-    public File getConfigFolder() {
-        return new File("configuration");
     }
 }

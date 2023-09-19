@@ -3,6 +3,7 @@ package de.timolia.lactea.loader.internal;
 import de.timolia.lactea.loader.Runtime;
 import de.timolia.lactea.loader.module.ModuleManager;
 import de.timolia.lactea.loader.startup.StartUpController;
+import de.timolia.lactea.loader.startup.internal.Integrity;
 import de.timolia.lactea.loader.startup.internal.ModuleLoadContext;
 
 import java.io.File;
@@ -21,8 +22,12 @@ public class DefaultRuntime implements Runtime {
     @Getter
     private final StartUpController startUpController;
 
-    public void initialize() {
+    public void loadLibraries() {
         moduleManager.loadLibraries();
+    }
+
+    public void initialize() {
+        Integrity.checkIntegrity();
         postLibraries();
     }
 

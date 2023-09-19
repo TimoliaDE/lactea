@@ -14,6 +14,7 @@ public class ModuleLoaderPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        runtime.loadLibraries();
         runtime.getStartUpController().addGlobalModule(new BukkitModule(this));
         runtime.initialize();
     }
