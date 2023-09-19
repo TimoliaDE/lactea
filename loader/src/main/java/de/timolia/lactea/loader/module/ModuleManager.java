@@ -1,6 +1,7 @@
 package de.timolia.lactea.loader.module;
 
 import de.timolia.lactea.loader.startup.StartUpController;
+import de.timolia.lactea.loader.startup.internal.ModuleBootOrder;
 import de.timolia.lactea.loader.startup.internal.ModuleLoadContext;
 import java.io.File;
 import java.lang.reflect.InaccessibleObjectException;
@@ -10,10 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.jar.JarFile;
@@ -28,8 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class ModuleManager {
     private final Logger logger = Logger.getLogger(ModuleManager.class.getName());
     private final File container;
-    private final Map<String, ModuleDescription> definitions = new HashMap<>();
-    private final Map<String, LacteaModule> modules = new HashMap<>();
+    private final ModuleRegistry registry = new ModuleRegistry();
+    private final ModuleBootOrder bootOrder = new ModuleBootOrder(registry);
     private final Set<String> loaded = new HashSet<>();
 
     public boolean isLoaded(String name) {
@@ -37,7 +36,7 @@ public class ModuleManager {
     }
 
     public LacteaModule byName(String name) {
-        return modules.get(name);
+        return registry.byName(name);
     }
 
     private boolean checkInvalidCandidate(File candidate) {
@@ -47,14 +46,14 @@ public class ModuleManager {
             || !name.endsWith(".jar");
     }
 
-    private File childDirectory(String name) {
+    private File makeChildDirectory(String name) {
         File directory = new File(container, name);
         directory.mkdirs();
         return directory;
     }
 
     private void forEachJar(String namespace, Consumer<File> consumer) {
-        File jarDirectory = childDirectory(namespace);
+        File jarDirectory = makeChildDirectory(namespace);
         File[] candidates = jarDirectory.listFiles();
         if (candidates != null) {
             for (File candidate : candidates) {
@@ -82,26 +81,25 @@ public class ModuleManager {
         forEachJar("modules", candidate -> {
             try (JarFile jar = new JarFile(candidate)) {
                 ModuleDescription desc = new ModuleDescription(candidate, jar);
-                if (definitions.put(desc.getName(), desc) != null) {
-                    logger.warning("Duplicated definition for " + desc.getName());
-                }
+                registry.addDefinition(desc);
             } catch (Throwable throwable) {
                 logger.log(Level.SEVERE, "Failed to scan " + candidate, throwable);
             }
         });
+        bootOrder.addBatchAndLock(registry.definitions());
     }
 
     public List<ModuleLoadContext> loadAll(StartUpController startUpController) {
         URLClassLoader loader = (URLClassLoader) ModuleManager.class.getClassLoader();
         Method addURL = addUrlMethod();
         List<ModuleLoadContext> contexts = new ArrayList<>();
-        for (ModuleDescription description : definitions.values()) {
+        for (ModuleDescription description : bootOrder.ordered()) {
             try {
                 addURL.invoke(loader, description.url());
                 Class<? extends LacteaModule> main = description.mainClass();
                 LacteaModule module = main.getConstructor().newInstance();
                 module.setDescription(description);
-                modules.put(description.getName(), module);
+                registry.addModule(module);
                 ModuleLoadContext loadContext = startUpController.loadModule(module);
                 contexts.add(loadContext);
                 loaded.add(description.getName());
@@ -113,7 +111,7 @@ public class ModuleManager {
     }
 
     public void enableAll(StartUpController startUpController) {
-        for (LacteaModule module : modules.values()) {
+        for (LacteaModule module : bootOrder.orderedModules()) {
             try {
                 module.onEnable(startUpController.enableContext(module));
             } catch (Exception ex) {
@@ -123,14 +121,15 @@ public class ModuleManager {
     }
 
     public void disableAll() {
-        for (LacteaModule module : modules.values()) {
+        List<LacteaModule> orderedModules = bootOrder.orderedModules();
+        for (LacteaModule module : orderedModules) {
             try {
                 module.onDisable();
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Failed to disable " + module, ex);
             }
         }
-        for (LacteaModule module : modules.values()) {
+        for (LacteaModule module : orderedModules) {
             try {
                 module.onPostDisable();
             } catch (Exception ex) {

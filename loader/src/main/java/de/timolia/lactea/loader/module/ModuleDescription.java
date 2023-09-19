@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.jar.JarFile;
+import javassist.bytecode.annotation.Annotation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -20,6 +22,7 @@ public class ModuleDescription {
     private final DiscoveryIndex discoveryIndex = new DiscoveryIndex();
     private final DiscoveryClass main;
     private final String name;
+    private final DependencyDescription[] dependencies;
 
     public ModuleDescription(File file, JarFile jar) throws IOException {
         this.file = file;
@@ -30,7 +33,13 @@ public class ModuleDescription {
                 + " Candidates are: " + candidates);
         }
         main = candidates.iterator().next();
-        name = JavassistAnnotations.stringValue(main.byType(ModuleDefinition.class), "value");
+        Annotation definition = main.byType(ModuleDefinition.class);
+        name = JavassistAnnotations.stringValue(definition, "value");
+        try {
+            dependencies = JavassistAnnotations.dependencyDescriptions(definition, "dependencies");
+        } catch (Exception exception) {
+            throw new IllegalStateException("Failed to parse dependencies", exception);
+        }
     }
 
     public String nameAndLocation() {
@@ -43,5 +52,9 @@ public class ModuleDescription {
 
     public Class<? extends LacteaModule> mainClass() throws ClassNotFoundException {
         return (Class<? extends LacteaModule>) main.loadClass();
+    }
+
+    public record DependencyDescription(String value, boolean required) {
+
     }
 }
