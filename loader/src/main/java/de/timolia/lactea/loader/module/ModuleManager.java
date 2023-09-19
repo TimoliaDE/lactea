@@ -3,7 +3,7 @@ package de.timolia.lactea.loader.module;
 import de.timolia.lactea.loader.startup.StartUpController;
 import de.timolia.lactea.loader.startup.internal.ModuleLoadContext;
 import java.io.File;
-import java.io.IOException;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -69,7 +69,6 @@ public class ModuleManager {
     public void loadLibraries() {
         URLClassLoader loader = (URLClassLoader) ModuleManager.class.getClassLoader();
         Method addURL = addUrlMethod();
-        addURL.setAccessible(true);
         forEachJar("libraries", candidate -> {
             try {
                 addURL.invoke(loader, candidate.toURI().toURL());
@@ -86,8 +85,8 @@ public class ModuleManager {
                 if (definitions.put(desc.getName(), desc) != null) {
                     logger.warning("Duplicated definition for " + desc.getName());
                 }
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, "Failed to scan " + candidate, ex);
+            } catch (Throwable throwable) {
+                logger.log(Level.SEVERE, "Failed to scan " + candidate, throwable);
             }
         });
     }
@@ -147,6 +146,8 @@ public class ModuleManager {
             return addURL;
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
+        } catch (InaccessibleObjectException e) {
+            throw new RuntimeException("Make sure to open up reflection", e);
         }
     }
 }
