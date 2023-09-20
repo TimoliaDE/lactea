@@ -1,6 +1,7 @@
 package de.timolia.lactea.loader.module;
 
 import de.timolia.lactea.loader.inject.ModuleInjector;
+import de.timolia.lactea.loader.module.definition.ModuleDescription;
 import de.timolia.lactea.loader.startup.EnableContext;
 import de.timolia.lactea.loader.startup.LoadContext;
 import java.util.logging.Logger;

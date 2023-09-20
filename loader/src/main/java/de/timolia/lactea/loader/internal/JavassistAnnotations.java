@@ -1,6 +1,6 @@
 package de.timolia.lactea.loader.internal;
 
-import de.timolia.lactea.loader.module.ModuleDescription.DependencyDescription;
+import de.timolia.lactea.loader.module.definition.ModuleDescription.DependencyDescription;
 import javassist.bytecode.annotation.Annotation;
 import javassist.bytecode.annotation.AnnotationMemberValue;
 import javassist.bytecode.annotation.ArrayMemberValue;

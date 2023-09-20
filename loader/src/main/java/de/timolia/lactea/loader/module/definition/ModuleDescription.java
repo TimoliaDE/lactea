@@ -1,6 +1,7 @@
-package de.timolia.lactea.loader.module;
+package de.timolia.lactea.loader.module.definition;
 
 import de.timolia.lactea.loader.internal.JavassistAnnotations;
+import de.timolia.lactea.loader.module.LacteaModule;
 import de.timolia.lactea.loader.module.discovery.DiscoveryClass;
 import de.timolia.lactea.loader.module.discovery.DiscoveryIndex;
 import java.io.File;
@@ -10,7 +11,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.jar.JarFile;
 import javassist.bytecode.annotation.Annotation;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**

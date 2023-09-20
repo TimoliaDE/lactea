@@ -1,4 +1,4 @@
-package de.timolia.lactea.loader.module;
+package de.timolia.lactea.loader.module.definition;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

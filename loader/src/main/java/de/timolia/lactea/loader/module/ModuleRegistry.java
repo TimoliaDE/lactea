@@ -1,11 +1,11 @@
 package de.timolia.lactea.loader.module;
 
+import de.timolia.lactea.loader.module.definition.ModuleDescription;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 public class ModuleRegistry {

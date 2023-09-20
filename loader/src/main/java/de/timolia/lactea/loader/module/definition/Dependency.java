@@ -1,4 +1,4 @@
-package de.timolia.lactea.loader.module;
+package de.timolia.lactea.loader.module.definition;
 
 public @interface Dependency {
     String value();

@@ -1,5 +1,6 @@
 package de.timolia.lactea.loader.module;
 
+import de.timolia.lactea.loader.module.definition.ModuleDescription;
 import de.timolia.lactea.loader.startup.StartUpController;
 import de.timolia.lactea.loader.startup.internal.ModuleBootOrder;
 import de.timolia.lactea.loader.startup.internal.ModuleLoadContext;

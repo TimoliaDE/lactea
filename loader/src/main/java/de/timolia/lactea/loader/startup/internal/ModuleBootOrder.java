@@ -1,8 +1,8 @@
 package de.timolia.lactea.loader.startup.internal;
 
 import de.timolia.lactea.loader.module.LacteaModule;
-import de.timolia.lactea.loader.module.ModuleDescription;
-import de.timolia.lactea.loader.module.ModuleDescription.DependencyDescription;
+import de.timolia.lactea.loader.module.definition.ModuleDescription;
+import de.timolia.lactea.loader.module.definition.ModuleDescription.DependencyDescription;
 import de.timolia.lactea.loader.module.ModuleRegistry;
 import java.util.ArrayList;
 import java.util.Collection;
