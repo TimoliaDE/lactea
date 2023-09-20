@@ -21,6 +21,15 @@ public abstract class ConfigFormat {
         }
     };
 
+    public static ConfigFormat JSON = new ConfigFormat("json", "json") {
+        @Override
+        public ObjectMapper createObjectMapper() {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.findAndRegisterModules();
+            return mapper;
+        }
+    };
+
     @Getter
     private final String extension;
     @Getter

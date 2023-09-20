@@ -18,6 +18,7 @@ public class ConfigController {
 
     {
         registerFormat(ConfigFormat.YAML);
+        registerFormat(ConfigFormat.JSON);
         registerPlaceholder("lactea:", "lactea/config/");
     }
 
