@@ -3,6 +3,7 @@ package de.timolia.lactea.loader.startup.internal;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import de.timolia.lactea.loader.config.LocalConfigModuleFactory;
+import de.timolia.lactea.loader.inject.InjectedInstance;
 import de.timolia.lactea.loader.module.InternalModuleAccess;
 import de.timolia.lactea.loader.module.LacteaModule;
 import de.timolia.lactea.loader.startup.LoadContext;
@@ -20,17 +21,20 @@ import lombok.RequiredArgsConstructor;
 public class ModuleLoadContext implements LoadContext {
     private final StartUpController controller;
     private final LacteaModule module;
-    private final List<Function<Injector, Module>> localModules = new ArrayList<>();
+    private final List<InjectedInstance<Module>> localModules = new ArrayList<>();
 
     public void fullModuleInitialization(Injector global) {
-        installModule(global.getInstance(LocalConfigModuleFactory.class).create(module));
+        installModule(InjectedInstance.ofFactory(
+            LocalConfigModuleFactory.class,
+            factory -> factory.create(module)
+        ));
         Injector injector = createInjector(global);
         InternalModuleAccess.setInjector(module, injector);
     }
 
     private Injector createInjector(Injector global) {
         return global.createChildInjector(localModules.stream()
-            .map(function -> function.apply(global))
+            .map(instanceProvider -> instanceProvider.getInstance(global))
             .collect(Collectors.toList()));
     }
 
@@ -40,12 +44,7 @@ public class ModuleLoadContext implements LoadContext {
     }
 
     @Override
-    public void installModule(Module module) {
-        localModules.add(injector -> module);
-    }
-
-    @Override
-    public void installModule(Class<? extends Module> moduleClass) {
-        localModules.add(injector -> injector.getInstance(moduleClass));
+    public void installModule(InjectedInstance<Module> module) {
+        localModules.add(module);
     }
 }

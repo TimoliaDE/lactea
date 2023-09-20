@@ -1,6 +1,7 @@
 package de.timolia.lactea.loader.startup;
 
 import com.google.inject.Module;
+import de.timolia.lactea.loader.inject.InjectedInstance;
 
 /**
  * @author David (_Esel)
@@ -8,7 +9,5 @@ import com.google.inject.Module;
 public interface LoadContext {
     void installGlobalModule(Module module);
 
-    void installModule(Module module);
-
-    void installModule(Class<? extends Module> moduleClass);
+    void installModule(InjectedInstance<Module> module);
 }
