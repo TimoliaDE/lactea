@@ -24,7 +24,6 @@ public class StartUpController {
     public ModuleLoadContext loadContext(LacteaModule module) {
         return new ModuleLoadContext(this, module);
     }
-
     public EnableContext enableContext(LacteaModule module) {
         return new EnableContext() {};
     }

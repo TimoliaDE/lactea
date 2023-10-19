@@ -2,6 +2,7 @@ package de.timolia.lactea.bukkitloader;
 
 import de.timolia.lactea.bukkitloader.inject.BukkitModule;
 import de.timolia.lactea.loader.internal.DefaultRuntime;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

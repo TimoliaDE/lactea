@@ -44,19 +44,4 @@ public class LocalConfigModule extends AbstractModule {
     private <T> void bindConfig(String name, Class<T> clazz) {
         bind(clazz).toInstance(createConfigObject(name, clazz));
     }
-
-    @Override
-    protected void configure() {
-        for (DiscoveryClass clazz : module.getDescription().getDiscoveryIndex().runDiscovery(ConfigDefinition.class)) {
-            String name = JavassistAnnotations.stringValue(clazz.byType(ConfigDefinition.class), "value");
-            Class<?> loaded;
-            try {
-                loaded = clazz.loadClass();
-            } catch (ClassNotFoundException e) {
-                logger.log(Level.SEVERE, "Failed to find class previously discovered: " + clazz.getName(), e);
-                continue;
-            }
-            bindConfig(name, loaded);
-        }
-    }
 }

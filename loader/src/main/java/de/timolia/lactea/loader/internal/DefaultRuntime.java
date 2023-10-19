@@ -21,6 +21,7 @@ public class DefaultRuntime implements Runtime {
     private final ModuleManager moduleManager;
     @Getter
     private final StartUpController startUpController;
+    private final RuntimeProvider runtimeProvider;
 
     public void loadLibraries() {
         moduleManager.loadLibraries();
@@ -42,7 +43,7 @@ public class DefaultRuntime implements Runtime {
         moduleManager.enableAll(startUpController);
     }
 
-    public void shutdown() {
+    public void disable() {
         moduleManager.disableAll();
     }
 
@@ -59,6 +60,7 @@ public class DefaultRuntime implements Runtime {
 
     public static DefaultRuntime create(File fileRoot) {
         ModuleManager moduleManager = new ModuleManager(fileRoot);
-        return new DefaultRuntime(moduleManager, new StartUpController());
+        return null;
+        //return new DefaultRuntime(moduleManager, new StartUpController());
     }
 }

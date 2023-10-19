@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
  * @author David (_Esel)
  */
 @Target({ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleDefinition {
     String value();
 
