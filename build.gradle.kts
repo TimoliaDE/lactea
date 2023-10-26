@@ -1,8 +1,9 @@
-plugins {
+allprojects {
+    group = "de.timolia.lactea"
+    version = "1.0-SNAPSHOT"
 }
-group = "de.timolia"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
+subprojects {
+    repositories {
+        mavenCentral()
+    }
 }
