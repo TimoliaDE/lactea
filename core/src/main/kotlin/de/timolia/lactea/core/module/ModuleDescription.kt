@@ -14,12 +14,8 @@ class ModuleDescription(
     val dependencies: Array<DependencyDescription>
 
     init {
-        val candidates: Collection<DiscoveryClass> = discoveryIndex.runDiscovery(ModuleDefinition::class.java)
-        check(candidates.size == 1) {
-            ("Require exactly one Module definition."
-                    + " Candidates are: " + candidates)
-        }
-        main = candidates.iterator().next()
+        val candidates = discoveryIndex.runDiscovery(ModuleDefinition::class.java)
+        main = candidates.requireExactlyOne("Module definition")
         val definition: Annotation = main.byType(ModuleDefinition::class.java)!!
         name = JavassistAnnotations.stringValue(definition, "value")
         dependencies = try {

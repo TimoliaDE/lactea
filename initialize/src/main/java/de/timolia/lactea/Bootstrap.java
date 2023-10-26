@@ -41,4 +41,12 @@ public class Bootstrap {
         classPathInjector.addToClassPath(librariesRoot);
         integrity.checkIntegrity();
     }
+
+    public PathResolver pathResolver() {
+        return pathResolver;
+    }
+
+    public ClassPathInjector classPathInjector() {
+        return classPathInjector;
+    }
 }

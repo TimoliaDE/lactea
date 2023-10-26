@@ -1,11 +1,15 @@
 rootProject.name = "lactea"
 include(
-    "initialize"
+    "initialize",
+    "config",
+    "core",
+    "module-api"
 )
-include("loader")
-include("loader-nukkit")
-include("loader-bukkit")
-include("loader-standalone")
-include("module-api")
-include("core")
-include("core")
+includeLoaderProject("bukkit")
+includeLoaderProject("nukkit")
+includeLoaderProject("standalone")
+fun includeLoaderProject(name: String) {
+    val fullName = "loader:loader-$name"
+    include(fullName)
+    findProject(":$fullName")!!.name = "loader-$name"
+}

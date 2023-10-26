@@ -12,6 +12,7 @@ import java.util.jar.JarFile
 
 class DiscoveryIndex {
     private val index: Multimap<String, DiscoveryClass> = HashMultimap.create()
+
     fun addToIndex(discoveryClass: DiscoveryClass) {
         for (annotation in discoveryClass.annotations) {
             index.put(annotation.typeName, discoveryClass)
@@ -33,11 +34,7 @@ class DiscoveryIndex {
         }
     }
 
-    fun runDiscovery(search: String): Collection<DiscoveryClass> {
-        return index[search]
-    }
+    fun runDiscovery(search: String) = DiscoveryResult(index[search])
 
-    fun runDiscovery(search: Class<out Annotation>): Collection<DiscoveryClass> {
-        return runDiscovery(search.name)
-    }
+    fun runDiscovery(search: Class<out Annotation>) = runDiscovery(search.name)
 }
